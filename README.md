@@ -1,64 +1,66 @@
-# Modernização de Arquitetura Bancária & Engajamento Digital
+# 🏗️ Modernização de Arquitetura Bancária & Engajamento Digital
 
 ![Status](https://img.shields.io/badge/Status-Architecture_Vision-blue)
-![Domain](https://img.shields.io/badge/Domain-Banking-green)
+![Role](https://img.shields.io/badge/Role-Tech_Lead-red)
+![Stack](https://img.shields.io/badge/Stack-Java_|_Node_|_Python-green)
 ![Standard](https://img.shields.io/badge/Standard-TOGAF_%26_BIAN-orange)
-![Style](https://img.shields.io/badge/Architecture_Style-Event_Driven_Microservices-blueviolet)
 
-> **Enterprise Architecture Case Study:** Definição da estratégia arquitetural para romper silos legados, habilitar a "Conta de Pagamentos" e aumentar o engajamento do cliente.
+> **Enterprise Architecture Case Study:** Estratégia arquitetural para o Banco SP, focada em romper silos legados, habilitar a "Conta de Pagamentos" e elevar o engajamento através de uma plataforma escalável.
 
 ---
 
 ## 📑 Índice
 1. [Contexto e Desafio de Negócio](#1-contexto-e-desafio-de-negócio)
-2. [Estratégia de Negócio & Cadeia de Valor](#2-estratégia-de-negócio--cadeia-de-valor)
-3. [Domain-Driven Design (DDD) Estratégico](#3-domain-driven-design-ddd-estratégico)
-4. [Visão de Arquitetura (TO-BE)](#4-visão-de-arquitetura-to-be)
-5. [Padrões de Decomposição de Microsserviços](#5-padrões-de-decomposição-de-microsserviços)
-6. [Plano de Migração (Strangler Fig)](#6-plano-de-migração-strangler-fig)
-7. [Architecture Decision Records (ADRs)](#7-architecture-decision-records-adrs)
+2. [Estratégia & Decisão (Buy vs Build)](#2-estratégia--decisão-buy-vs-build)
+3. [Arquitetura de Solução (C4 Model)](#3-arquitetura-de-solução-c4-model)
+4. [Liderança Técnica & Performance](#4-liderança-técnica--performance)
+5. [Plano de Migração & ADRs](#5-plano-de-migração--adrs)
 
 ---
 
 ## 1. Contexto e Desafio de Negócio
 
-O Banco SP, uma instituição tradicional focada em crédito (CDC, Consignado, Cartões), enfrenta um desafio de **engajamento**. A arquitetura atual é composta por **silos tecnológicos** que impedem a inovação rápida e a visão única do cliente.
+O Banco SP enfrentava baixa recorrência de uso e silos tecnológicos. A missão foi definir o **Building Block (ABB)** fundamental para transformar o banco em um ecossistema digital.
 
-**Objetivos do Projeto:**
-1. Aumentar o engajamento do cliente através da expansão do portfólio.
-2. Modernizar a plataforma tecnológica para acelerar o *Time-to-Market*.
-3. Decidir estrategicamente entre dois produtos alavancadores: **Conta de Pagamentos** ou **Cashback**.
+* **Objetivo:** Implementar a **Conta de Pagamentos** como fundação para capturar dados transacionais e habilitar cross-sell de crédito.
+* **Impacto:** Redução do Time-to-Market para novos produtos financeiros através de serviços desacoplados.
 
 ---
 
-## 2. Estratégia de Negócio & Cadeia de Valor
+## 2. Estratégia & Decisão
 
-### 2.1. Decisão Estratégica: Priorização da Conta de Pagamentos
-A recomendação da Arquitetura Corporativa é a implementação imediata da **Conta de Pagamentos**.
+A recomendação técnica priorizou a **Conta de Pagamentos** sobre o Cashback devido à frequência de uso diária (Pix/Boletos), criando uma base de custódia necessária para produtos futuros.
 
-| Critério | Conta de Pagamentos | Cashback |
-| :--- | :--- | :--- |
-| **Frequência de Uso** | **Diária** (Pagamentos, Pix, Boletos) | Esporádica (Pós-compra) |
-| **Captura de Dados** | Alta (Visão completa do fluxo financeiro) | Média (Apenas consumo) |
-| **Valor Arquitetural** | **Fundação (ABB)**: Cria a base de custódia e movimentação necessária para qualquer outro produto. | Dependência: Necessita de uma conta/carteira para operar. |
 
-### 2.2. Mapa de Cadeia de Valor (Value Stream)
+
+---
+
+## 3. Arquitetura de Solução (C4 Model)
+
+### 3.1. Diagrama de Containers (Nível 2)
+Abaixo, a decomposição da solução utilizando **Event-Driven Architecture** para garantir resiliência e baixa latência.
 
 ```mermaid
 graph LR
-    subgraph Aquisicao [Jornada de Entrada]
-        MKT[Marketing] --> OB[Onboarding Digital & KYC]
+    subgraph Clients [Canais Digitais]
+        Mobile[Mobile App / React]
+        Web[Dashboard / Angular]
     end
 
-    subgraph Engajamento [Core - Recorrência]
-        OB --> CP[Abertura de Conta Pagamento]
-        CP --> TX[Transacionalidade Diária Pix/Bill Pay]
-        TX --> EDU[Educação Financeira / PFM]
+    Gateway[API Gateway]
+
+    subgraph Ecosystem [Microsserviços]
+        MS_Java[Core Financeiro / Java Spring]
+        MS_Node[Streaming de Transações / Node.js]
+        MS_Python[Motor de Fraude / Python]
     end
 
-    subgraph Monetizacao [Cross-Sell]
-        TX --> ANALISE[Análise de Perfil Data-Driven]
-        ANALISE --> CRED[Oferta de Crédito Contextual]
-    end
+    Broker{Kafka}
+    DB[(PostgreSQL / Redis)]
 
-    style Engajamento fill:#f9f,stroke:#333,stroke-width:2px
+    Clients --> Gateway
+    Gateway --> MS_Java
+    MS_Java --> Broker
+    Broker --> MS_Node
+    Broker --> MS_Python
+    MS_Node --> DB
