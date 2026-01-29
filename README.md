@@ -14,8 +14,6 @@
 2. [Estratégia de Negócio & Cadeia de Valor](#2-estratégia-de-negócio--cadeia-de-valor)
 3. [Domain-Driven Design (DDD) Estratégico](#3-domain-driven-design-ddd-estratégico)
 4. [Visão de Arquitetura (TO-BE)](#4-visão-de-arquitetura-to-be)
-   - [Diagrama de Contexto (C4 Nível 1)](#diagrama-de-contexto-c4-nível-1)
-   - [Diagrama de Containers (C4 Nível 2)](#diagrama-de-containers-c4-nível-2)
 5. [Padrões de Decomposição de Microsserviços](#5-padrões-de-decomposição-de-microsserviços)
 6. [Plano de Migração (Strangler Fig)](#6-plano-de-migração-strangler-fig)
 7. [Architecture Decision Records (ADRs)](#7-architecture-decision-records-adrs)
@@ -27,9 +25,9 @@
 O Banco SP, uma instituição tradicional focada em crédito (CDC, Consignado, Cartões), enfrenta um desafio de **engajamento**. A arquitetura atual é composta por **silos tecnológicos** que impedem a inovação rápida e a visão única do cliente.
 
 **Objetivos do Projeto:**
-1.  Aumentar o engajamento do cliente através da expansão do portfólio.
-2.  Modernizar a plataforma tecnológica para acelerar o *Time-to-Market*.
-3.  Decidir estrategicamente entre dois produtos alavancadores: **Conta de Pagamentos** ou **Cashback**.
+1. Aumentar o engajamento do cliente através da expansão do portfólio.
+2. Modernizar a plataforma tecnológica para acelerar o *Time-to-Market*.
+3. Decidir estrategicamente entre dois produtos alavancadores: **Conta de Pagamentos** ou **Cashback**.
 
 ---
 
@@ -45,7 +43,6 @@ A recomendação da Arquitetura Corporativa é a implementação imediata da **C
 | **Valor Arquitetural** | **Fundação (ABB)**: Cria a base de custódia e movimentação necessária para qualquer outro produto. | Dependência: Necessita de uma conta/carteira para operar. |
 
 ### 2.2. Mapa de Cadeia de Valor (Value Stream)
-O fluxo abaixo demonstra como a Conta de Pagamentos atua como o elo entre a aquisição do cliente e a rentabilização via crédito.
 
 ```mermaid
 graph LR
@@ -55,14 +52,13 @@ graph LR
 
     subgraph Engajamento [Core - Recorrência]
         OB --> CP[Abertura de Conta Pagamento]
-        CP --> TX[Transacionalidade Diária (Pix/Bill Pay)]
+        CP --> TX[Transacionalidade Diária Pix/Bill Pay]
         TX --> EDU[Educação Financeira / PFM]
     end
 
     subgraph Monetizacao [Cross-Sell]
-        TX --> ANALISE[Análise de Perfil (Data-Driven)]
+        TX --> ANALISE[Análise de Perfil Data-Driven]
         ANALISE --> CRED[Oferta de Crédito Contextual]
     end
 
-    style Engajamento fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-
+    style Engajamento fill:#f9f,stroke:#333,stroke-width:2px
