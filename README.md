@@ -1,4 +1,4 @@
-# Modernização de Arquitetura Bancária & Engajamento Digital (Banco SP)
+# Modernização de Arquitetura Bancária & Engajamento Digital
 
 ![Status](https://img.shields.io/badge/Status-Architecture_Vision-blue)
 ![Domain](https://img.shields.io/badge/Domain-Banking-green)
@@ -65,3 +65,4 @@ graph LR
     end
 
     style Engajamento fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+
