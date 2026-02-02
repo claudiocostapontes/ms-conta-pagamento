@@ -41,7 +41,7 @@ A recomendação técnica priorizou a **Conta de Pagamentos** sobre o Cashback d
 Abaixo, a decomposição da solução utilizando **Event-Driven Architecture** para garantir resiliência e baixa latência.
 
 ```mermaid
-flowchart TD
+flowchart LR
     %% Processo de Avaliação de Arquitetura Empresarial e Modernização de Core Bancário
     A1["Nó Central: Matriz de Riscos Críticos (Heatmap)"]
     A1 --> B1["1.1 Risco Estratégico: Escolha do Produto<br/>Status: Severidade Crítica"]
@@ -63,11 +63,11 @@ flowchart TD
     B3 --> C10["Adotar Solução Híbrida"]
     B3 --> C11["Incluir Cláusula de Exit Strategy"]
 
-    B4 --> C12["Risco Regulatório: Mitigar com Conformidade"]
+    B4 --> C12["Risco Regulatório: Conformidade"]
     B4 --> C13["Risco Integração: Padrão Saga e EDA"]
-    B4 --> C14["Risco Organizacional: OKRs e Change Management"]
-    B4 --> C15["Risco Financeiro: Reserva de Contingência 30%"]
-    B4 --> C16["Risco Segurança: Zero Trust, mTLS, Threat Modeling"]
+    B4 --> C14["Risco Organizacional: OKRs e CM"]
+    B4 --> C15["Risco Financeiro: Contingência 30%"]
+    B4 --> C16["Risco Segurança: Zero Trust/mTLS"]
 
     C1 & C2 & C3 & C4 & C5 & C6 & C7 & C8 & C9 & C10 & C11 & C12 & C13 & C14 & C15 & C16 --> D1["Avaliação de Complexidade Técnica e Time-to-Market"]
 
@@ -78,7 +78,7 @@ flowchart TD
     F1 & F2 --> G1["Identificação dos 5 Grandes Silos (Estado Atual)"]
 
     subgraph SG_SILOS["Silos Legados (Estado Atual)"]
-        direction LR
+        direction TB
         SG_Start --> H1["Silo 1: Empréstimos CDC<br/>Tec: Mainframe/COBOL<br/>Dados: Base A Isolada"]
         H1 --> H2["Silo 2: Gestão de Cartão<br/>Tec: Alta Latência<br/>Dados: Base B Isolada"]
         H2 --> H3["Silo 3: Consignado<br/>Tec: Processamento Batch<br/>Dep: Averbadoras Externas"]
