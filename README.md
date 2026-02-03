@@ -42,87 +42,65 @@ Abaixo, a decomposição da solução utilizando **Event-Driven Architecture** p
 
 ```mermaid
 graph LR
-    %% Estilos para ficar igual ao diagrama (Laranja e Bordas)
+    %% Estilos (Laranja e Bordas arredondadas conforme o original)
     classDef startNode fill:#faa,stroke:#333,stroke-width:2px;
-    classDef processNode fill:#ffb366,stroke:#d67a00,stroke-width:2px,color:black;
-    classDef decisionNode fill:#ffd24d,stroke:#b38f00,stroke-width:2px,color:black;
-    classDef endNode fill:#ffb366,stroke:#d67a00,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef processNode fill:#ffb366,stroke:#d67a00,stroke-width:2px,color:black,rx:5,ry:5;
+    classDef decisionNode fill:#ffd24d,stroke:#b38f00,stroke-width:2px,color:black,rx:5,ry:5;
+    classDef endNode fill:#ffcc99,stroke:#d67a00,stroke-width:2px,stroke-dasharray: 5 5,rx:5,ry:5;
 
-    %% --- BLOCO 1: Início e Ramificação Inicial ---
+    %% --- BLOCO 1: Entradas (Drivers) ---
     Start((Início)):::startNode
     
-    %% Coluna de processos paralelos (Esquerda)
-    subgraph Grupo_Entrada [Entradas]
+    subgraph Inputs [Drivers e Entradas]
         direction TB
-        A1[Atividade 1]:::processNode
-        A2[Atividade 2]:::processNode
-        A3[Atividade 3]:::processNode
-        A4[Atividade 4]:::processNode
-        A5[Atividade 5]:::processNode
-        A6[Atividade 6]:::processNode
-        A7[Atividade 7]:::processNode
+        In1[Estratégia de Negócio]:::processNode
+        In2[Dores dos Silos Legados]:::processNode
+        In3[Regulatório BACEN/LGPD]:::processNode
+        In4[Débito Técnico COBOL]:::processNode
     end
 
-    %% Conexões do Início
-    Start --> A1 & A2 & A3 & A4 & A5 & A6 & A7
+    Start --> In1 & In2 & In3 & In4
 
-    %% Consolidação 1
-    Consolidador1[Consolidação Inicial]:::processNode
-    A1 & A2 & A3 & A4 & A5 & A6 & A7 --> Consolidador1
+    %% Consolidação Inicial
+    Assessment[Assessment da<br/>Situação Atual]:::processNode
+    In1 & In2 & In3 & In4 --> Assessment
 
-    %% --- BLOCO 2: Decisão e Caminhos Complexos ---
-    Decisao{Decisão?}:::decisionNode
-    Consolidador1 --> Decisao
+    %% --- BLOCO 2: Decisão ---
+    Decisao{Aprovado para<br/>Modernizar?}:::decisionNode
+    Assessment --> Decisao
 
-    %% Caminho Superior
-    Decisao --> Sup1[Processo Superior 1]:::processNode
-    Sup1 --> Sup2[Processo Superior 2]:::processNode
-
-    %% Caminho do Meio (Complexo)
-    Decisao --> Meio1[Processo Central 1]:::processNode
-    Meio1 --> MeioSub1[Sub-processo A]:::processNode
-    Meio1 --> MeioSub2[Sub-processo B]:::processNode
-    MeioSub1 & MeioSub2 --> Meio2[Processo Central 2]:::processNode
-
-    %% Caminho Inferior
-    Decisao --> Inf1[Processo Inferior 1]:::processNode
-    Inf1 --> Inf2[Processo Inferior 2]:::processNode
-
-    %% --- BLOCO 3: Convergência Central ---
-    Unificador[Unificação dos Caminhos]:::processNode
+    %% --- BLOCO 3: O Core (TOGAF ADM) ---
+    %% Caminho Superior: Visão de Negócio
+    Decisao --> BizArch[Arquitetura de<br/>Negócios]:::processNode
+    BizArch --> CapMap[Mapa de<br/>Capacidades]:::processNode
     
-    Sup2 --> Unificador
-    Meio2 --> Unificador
-    Inf2 --> Unificador
+    %% Caminho do Meio: Visão de Sistemas (O mais complexo no desenho)
+    Decisao --> AppArch[Arquitetura de<br/>Sistemas]:::processNode
+    AppArch --> DDD[Definição de<br/>Bounded Contexts]:::processNode
+    DDD --> MicroS[Design de<br/>Microsserviços]:::processNode
+    CapMap & MicroS --> Integ[Estratégia de<br/>Integração (EDA)]:::processNode
 
-    %% --- BLOCO 4: Ramificação Secundária ---
-    subgraph Grupo_Analise [Análise Detalhada]
+    %% Caminho Inferior: Visão Tecnológica
+    Decisao --> TechArch[Arquitetura<br/>Tecnológica]:::processNode
+    TechArch --> Infra[Definição Stack<br/>Java 21/Cloud]:::processNode
+
+    %% --- BLOCO 4: Convergência e Planejamento ---
+    GapAnalysis[Análise de Gaps<br/>(Gap Analysis)]:::processNode
+    
+    Integ --> GapAnalysis
+    Infra --> GapAnalysis
+
+    Roadmap[Roadmap de Migração<br/>(Strangler Fig)]:::processNode
+    GapAnalysis --> Roadmap
+
+    %% --- BLOCO 5: Saídas (Outputs) ---
+    subgraph Outputs [Artefatos Finais]
         direction TB
-        B1[Item Análise 1]:::processNode
-        B2[Item Análise 2]:::processNode
-        B3[Item Análise 3]:::processNode
-        B4[Item Análise 4]:::processNode
-        B5[Item Análise 5]:::processNode
-        B6[Item Análise 6]:::processNode
+        Out1[Blueprint da<br/>Arquitetura Alvo]:::endNode
+        Out2[Backlog de<br/>Épicos e Histórias]:::endNode
+        Out3[Estudo de<br/>Viabilidade (ROI)]:::endNode
+        Out4[Matriz de<br/>Riscos e Mitigação]:::endNode
     end
 
-    Unificador --> B1 & B2 & B3 & B4 & B5 & B6
+    Roadmap --> Out1 & Out2 & Out3 & Out4
 
-    %% Consolidação 2
-    Consolidador2[Validação Final]:::processNode
-    B1 & B2 & B3 & B4 & B5 & B6 --> Consolidador2
-
-    %% --- BLOCO 5: Saída Final ---
-    Saida[Entrega Final]:::processNode
-    Consolidador2 --> Saida
-
-    subgraph Grupo_Saida [Resultados]
-        direction TB
-        F1[Resultado 1]:::endNode
-        F2[Resultado 2]:::endNode
-        F3[Resultado 3]:::endNode
-        F4[Resultado 4]:::endNode
-        F5[Resultado 5]:::endNode
-    end
-
-    Saida --> F1 & F2 & F3 & F4 & F5
