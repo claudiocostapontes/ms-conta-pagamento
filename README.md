@@ -41,84 +41,88 @@ A recomendação técnica priorizou a **Conta de Pagamentos** sobre o Cashback d
 Abaixo, a decomposição da solução utilizando **Event-Driven Architecture** para garantir resiliência e baixa latência.
 
 ```mermaid
-flowchart LR
-    %% Processo de Avaliação de Arquitetura Empresarial e Modernização de Core Bancário
-    A1["Nó Central: Matriz de Riscos Críticos (Heatmap)"]
-    A1 --> B1["1.1 Risco Estratégico: Escolha do Produto<br/>Status: Severidade Crítica"]
-    A1 --> B2["1.2 Risco Arquitetural: Débito Técnico e Silos<br/>Status: Severidade Crítica"]
-    A1 --> B3["1.3 Risco Operacional: Core Bancário<br/>Status: Severidade Crítica"]
-    A1 --> B4["1.4 Riscos Secundários (Altos/Médios)"]
+graph LR
+    %% Estilos para ficar igual ao diagrama (Laranja e Bordas)
+    classDef startNode fill:#faa,stroke:#333,stroke-width:2px;
+    classDef processNode fill:#ffb366,stroke:#d67a00,stroke-width:2px,color:black;
+    classDef decisionNode fill:#ffd24d,stroke:#b38f00,stroke-width:2px,color:black;
+    classDef endNode fill:#ffb366,stroke:#d67a00,stroke-width:2px,stroke-dasharray: 5 5;
 
-    B1 --> C1["Análise de Viabilidade Técnica Prévia"]
-    B1 --> C2["Abordagem MVP Paralela"]
-    B1 --> C3["Uso do TOGAF ADM"]
-
-    B2 --> C4["Mapeamento DDD (Bounded Contexts)"]
-    B2 --> C5["Implementar Camada Anticorrupção (ACL)"]
-    B2 --> C6["Aplicar Strangler Fig Pattern"]
-    B2 --> C7["Adotar Service Mesh"]
-
-    B3 --> C8["Análise Make vs. Buy"]
-    B3 --> C9["Realizar POC com Fornecedores"]
-    B3 --> C10["Adotar Solução Híbrida"]
-    B3 --> C11["Incluir Cláusula de Exit Strategy"]
-
-    B4 --> C12["Risco Regulatório: Conformidade"]
-    B4 --> C13["Risco Integração: Padrão Saga e EDA"]
-    B4 --> C14["Risco Organizacional: OKRs e CM"]
-    B4 --> C15["Risco Financeiro: Contingência 30%"]
-    B4 --> C16["Risco Segurança: Zero Trust/mTLS"]
-
-    C1 & C2 & C3 & C4 & C5 & C6 & C7 & C8 & C9 & C10 & C11 & C12 & C13 & C14 & C15 & C16 --> D1["Avaliação de Complexidade Técnica e Time-to-Market"]
-
-    D1 --> E1{Decisão de Produto Inicial}
-    E1 --Conta de Pagamentos--> F1["Complexidade: Muito Alta<br/>Tempo: 12-18 meses<br/>Barreira: Alta (BACEN)<br/>Reaproveitamento: Alto<br/>Impacto: Transformacional"]
-    E1 --Cashback--> F2["Complexidade: Média<br/>Tempo: 6-9 meses<br/>Barreira: Baixa<br/>Reaproveitamento: Médio<br/>Impacto: Incremental"]
-
-    F1 & F2 --> G1["Identificação dos 5 Grandes Silos (Estado Atual)"]
-
-    subgraph SG_SILOS["Silos Legados (Estado Atual)"]
+    %% --- BLOCO 1: Início e Ramificação Inicial ---
+    Start((Início)):::startNode
+    
+    %% Coluna de processos paralelos (Esquerda)
+    subgraph Grupo_Entrada [Entradas]
         direction TB
-        SG_Start --> H1["Silo 1: Empréstimos CDC<br/>Tec: Mainframe/COBOL<br/>Dados: Base A Isolada"]
-        H1 --> H2["Silo 2: Gestão de Cartão<br/>Tec: Alta Latência<br/>Dados: Base B Isolada"]
-        H2 --> H3["Silo 3: Consignado<br/>Tec: Processamento Batch<br/>Dep: Averbadoras Externas"]
-        H3 --> H4["Silo 4: Crédito Pessoal<br/>Dados: Histórico Fragmentado"]
-        H4 --> H5["Silo 5: Garantias & Consórcios<br/>Problema: Regras de Colateral Presas"]
-        H5 --> SG_End
+        A1[Atividade 1]:::processNode
+        A2[Atividade 2]:::processNode
+        A3[Atividade 3]:::processNode
+        A4[Atividade 4]:::processNode
+        A5[Atividade 5]:::processNode
+        A6[Atividade 6]:::processNode
+        A7[Atividade 7]:::processNode
     end
 
-    G1 --> SG_Start
-    SG_End --> I1["Problema: The Spaghetti Mesh<br/>- Conexões Ponto-a-Ponto<br/>- Acoplamento Oculto<br/>- Ausência de API Gateway/ESB<br/>- Latência Síncrona"]
+    %% Conexões do Início
+    Start --> A1 & A2 & A3 & A4 & A5 & A6 & A7
 
-    I1 --> I2["Fluxo de Falha: Customer 360º Fragmentado<br/>Ex: Cliente 'João' com dados inconsistentes em 3 silos"]
+    %% Consolidação 1
+    Consolidador1[Consolidação Inicial]:::processNode
+    A1 & A2 & A3 & A4 & A5 & A6 & A7 --> Consolidador1
 
-    I2 --> J1["Estratégia de Modernização: Refatoração dos Silos"]
-    J1 --> K1["Abordagem: Strangler Fig Pattern (Substituição Gradual)"]
-    J1 --> K2["Definir Pilha Tecnológica Alvo (Target Stack)"]
+    %% --- BLOCO 2: Decisão e Caminhos Complexos ---
+    Decisao{Decisão?}:::decisionNode
+    Consolidador1 --> Decisao
 
-    K2 --> L1["Linguagem: Java 21"]
-    K2 --> L2["Framework: Spring Boot 4.0.1"]
-    K2 --> L3["Gerenciamento: Maven"]
-    K2 --> L4["Containerização: Docker"]
-    K2 --> L5["Persistência: Spring Data JPA / Hibernate"]
-    K2 --> L6["Segurança: Spring Security"]
-    K2 --> L7["APIs: Spring Web / WebFlux"]
-    K2 --> L8["Arquitetura: Spring Cloud (Microsserviços)"]
+    %% Caminho Superior
+    Decisao --> Sup1[Processo Superior 1]:::processNode
+    Sup1 --> Sup2[Processo Superior 2]:::processNode
 
-    L1 & L2 & L3 & L4 & L5 & L6 & L7 & L8 --> M1["Visão de Arquitetura: Novo Core Bancário (Baseado em TOGAF)"]
+    %% Caminho do Meio (Complexo)
+    Decisao --> Meio1[Processo Central 1]:::processNode
+    Meio1 --> MeioSub1[Sub-processo A]:::processNode
+    Meio1 --> MeioSub2[Sub-processo B]:::processNode
+    MeioSub1 & MeioSub2 --> Meio2[Processo Central 2]:::processNode
 
-    subgraph SG_TOGAF["Ciclo TOGAF ADM para Novo Core"]
+    %% Caminho Inferior
+    Decisao --> Inf1[Processo Inferior 1]:::processNode
+    Inf1 --> Inf2[Processo Inferior 2]:::processNode
+
+    %% --- BLOCO 3: Convergência Central ---
+    Unificador[Unificação dos Caminhos]:::processNode
+    
+    Sup2 --> Unificador
+    Meio2 --> Unificador
+    Inf2 --> Unificador
+
+    %% --- BLOCO 4: Ramificação Secundária ---
+    subgraph Grupo_Analise [Análise Detalhada]
         direction TB
-        T_Start --> N1["Fase Preliminar: Escopo e Governança"]
-        N1 --> N2["Fase A: Visão de Arquitetura<br/>- Objetivo: Adaptabilidade<br/>- Escopo: CDC, Cartão, Crédito, Consignado, Garantias"]
-        N2 --> N3["Artefatos: Mapeamento de Capacidades (Core vs. Context)"]
-        N3 --> N4["Artefatos: Engenharia de Requisitos (Funcionais e Não-Funcionais)"]
-        N4 --> N5["Artefatos: Building Blocks (ABBs e SBBs)"]
-        N5 --> N6["Artefatos: Value Stream (Solicitação até Liberação)"]
-        N6 --> N7["Decisões: Padrões (DDD Bounded Contexts, Decomposição por Subdomínio)"]
-        N7 --> N8["Decisões: Estilos (Event-Driven Architecture - EDA)"]
-        N8 --> N9["Roadmap: Definir Arquitetura Alvo e Arquiteturas Intermediárias"]
-        N9 --> T_End
+        B1[Item Análise 1]:::processNode
+        B2[Item Análise 2]:::processNode
+        B3[Item Análise 3]:::processNode
+        B4[Item Análise 4]:::processNode
+        B5[Item Análise 5]:::processNode
+        B6[Item Análise 6]:::processNode
     end
-    M1 --> T_Start
-    T_End --> O1["Resultado: Novo Core Bancário (Funcionalidade Emergente)<br/>Orquestra a atualização gradual dos produtos legados"]
+
+    Unificador --> B1 & B2 & B3 & B4 & B5 & B6
+
+    %% Consolidação 2
+    Consolidador2[Validação Final]:::processNode
+    B1 & B2 & B3 & B4 & B5 & B6 --> Consolidador2
+
+    %% --- BLOCO 5: Saída Final ---
+    Saida[Entrega Final]:::processNode
+    Consolidador2 --> Saida
+
+    subgraph Grupo_Saida [Resultados]
+        direction TB
+        F1[Resultado 1]:::endNode
+        F2[Resultado 2]:::endNode
+        F3[Resultado 3]:::endNode
+        F4[Resultado 4]:::endNode
+        F5[Resultado 5]:::endNode
+    end
+
+    Saida --> F1 & F2 & F3 & F4 & F5
