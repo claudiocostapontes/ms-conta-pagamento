@@ -1,7 +1,5 @@
 package service;
 
 public interface EventPublisher {
-
-    void publishAccountCreated();
-    void publishBalanceUpdated();
+    void publish(String topic, String message);
 }

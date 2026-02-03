@@ -7,13 +7,27 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-// 1. ComponentScan: Ensina o Spring a olhar todas as suas pastas "irmãs"
-// ATENÇÃO: Verifique se sua pasta de controller chama "controller" ou "controller" (com um L só) e ajuste aqui se necessário.
-@ComponentScan(basePackages = {"conta", "service", "controller", "config", "aggregate", "repository"})
-// 2. EntityScan: Aponta para a pasta onde estão suas Entidades (PaymentAccount, LedgerEntry)
-@EntityScan(basePackages = {"aggregate"})
-// 3. EnableJpaRepositories: Aponta para onde estão seus Repositórios
-@EnableJpaRepositories(basePackages = {"repository", "service"})
+// 1. ComponentScan: Garante que o Spring ache seus Controllers e Services
+@ComponentScan(basePackages = {
+        "conta",
+        "service",
+        "controller",
+        "config",
+        "aggregate",
+        "repository",
+        "domain" // Adicionado para garantir
+})
+// 2. EntityScan: CRÍTICO! Adicionei "domain" aqui.
+// Sem isso, o erro "Not a managed type: LoanContract" vai voltar.
+@EntityScan(basePackages = {
+        "aggregate", // Onde está PaymentAccount
+        "domain"     // Onde está LoanContract (A CORREÇÃO ESTÁ AQUI)
+})
+// 3. EnableJpaRepositories: Onde estão as interfaces que estendem JpaRepository
+@EnableJpaRepositories(basePackages = {
+        "repository",
+        "service" // Mantive caso você tenha algum repositório legado aqui
+})
 public class MsContaPagamentoApplication {
 
     public static void main(String[] args) {
