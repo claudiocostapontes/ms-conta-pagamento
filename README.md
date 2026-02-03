@@ -42,47 +42,88 @@ Abaixo, a decomposição da solução utilizando **Event-Driven Architecture** p
 
 ```mermaid
 graph LR
-    %% Início do Processo
-    Start((Avaliação e Modernização)) --> Preliminar[Fase Preliminar: Preparação e Escopo]
+    %% Início: Matriz de Riscos
+    Start([Enterprise Architecture: Matriz de Riscos Críticos]) --> R_Estrat[Risco Estratégico: Escolha do Produto]
+    Start --> R_Arqui[Risco Arquitetural: Débito Técnico e Legado de Silos]
+    Start --> R_Desenv[Desenvolvimento de Core Bancário Próprio]
+    Start --> R_Sec[Riscos Secundários Altas/Médios]
 
-    subgraph "Identificação e Diagnóstico"
-        Preliminar --> Entrevistas[Realizar Entrevistas com Stakeholders]
-        Preliminar --> AnaliseDoc[Análise de Documentação Atual]
-        Preliminar --> Inventario[Inventário de Tecnologia e Sistemas]
-        
-        Entrevistas --> Consolidacao[Consolidação de Requisitos e Dores]
-        AnaliseDoc --> Consolidacao
-        Inventario --> Consolidacao
-    end
+    %% Detalhamento de Riscos e Mitigações
+    R_Estrat --> AvaliacaoComp[Avaliação de Complexidade Técnica - Avaliação do Time de Enterprise Architect]
+    R_Arqui --> AvaliacaoComp
+    R_Desenv --> AvaliacaoComp
+    R_Sec --> AvaliacaoComp
 
-    Consolidacao --> Decisao{Prosseguir?}
+    %% Itens da Avaliação Técnica
+    AvaliacaoComp --- AnaliseVia[Análise de Viabilidade Técnica Prévia]
+    AvaliacaoComp --- AbordagemMVP[Abordagem MVP Paralela]
+    AvaliacaoComp --- UsoTOGAF[Uso do TOGAF ADM]
+    AvaliacaoComp --- MapeamentoDDD[Mapeamento DDD Bounded Contexts]
+    AvaliacaoComp --- CamadaACL[Implementar Camada Anticorrupção ACL]
+    AvaliacaoComp --- Strangler[Aplicar Strangler Fig Pattern]
+    AvaliacaoComp --- ServiceMesh[Adotar Service Mesh]
+    AvaliacaoComp --- AnaliseMakeBuy[Análise Make vs. Buy]
+    AvaliacaoComp --- POC[Realizar POC com Fornecedores]
+    AvaliacaoComp --- SoluHibrida[Adotar Solução Híbrida]
+    AvaliacaoComp --- ExitStrategy[Incluir Cláusula de Exit Strategy]
+
+    %% Decisão e Silos
+    AvaliacaoComp --> Decisao{Decisão de Produto Inicial}
     
-    subgraph "Ciclo TOGAF ADM Adaptado"
-        Decisao -- Sim --> Visao[Fase A: Visão da Arquitetura]
-        Visao --> Negocio[Fase B: Arquitetura de Negócio]
-        Negocio --> Sistemas[Fase C: Arquitetura de Sistemas de Informação]
-        Sistemas --> Tecnologia[Fase D: Arquitetura de Tecnologia]
-        
-        Tecnologia --> Gap[Análise de Gap e Oportunidades]
+    Decisao --> IdentSilos[Identificação dos 5 Grandes Silos: CDC, Cartão, Pessoal, Consignado, Imóvel]
+    
+    IdentSilos --> ContasPag[CONTAS DE PAGAMENTO: Tempo 12-18 meses - Impacto Transformacional]
+    IdentSilos --> Cashback[CASHBACK: Complexidade Média - Impacto Incremental]
+    
+    %% Detalhamento dos Silos
+    IdentSilos --> Silo1[Silo 1: CDC - Tec: Mainframe/COBOL]
+    IdentSilos --> Silo2[Silo 2: Cartão de Crédito - Tec: Alta Latência]
+    IdentSilos --> Silo3[Silo 3: Crédito Pessoal - Dep: Averbadoras Externas]
+    IdentSilos --> Silo4[Silo 4: Consignados - Dados: Histórico Fragmentado]
+    IdentSilos --> Silo5[Silo 5: Empréstimos com Garantia]
+
+    %% Estratégia de Modernização
+    ContasPag --> EstratMod[Estratégia de Modernização: Refatoração dos Silos]
+    Silo1 & Silo2 & Silo3 & Silo4 & Silo5 --> EstratMod
+    
+    EstratMod --> StranglerApp[Abordagem: Strangler Fig Pattern Substituição Gradual]
+    EstratMod --> Spaghetti[Problema: The Spaghetti Mess - Conexões Ponto-a-Ponto]
+
+    %% Target Stack
+    StranglerApp --> TargetStack[Definir Pilha Tecnológica Alvo Target State]
+    Spaghetti --> TargetStack
+
+    subgraph "Pilha Tecnológica Alvo"
+        TargetStack --- Java21[Linguagem: Java 21]
+        TargetStack --- SpringBoot[Framework: Spring Boot 3.3.x]
+        TargetStack --- Nuvem[Gerenciamento: Nuvem]
+        TargetStack --- Docker[Containerização: Docker]
+        TargetStack --- JPA[Persistência: Spring Data JPA / Hibernate]
+        TargetStack --- Security[Segurança: Spring Security]
+        TargetStack --- WebFlux[APIs: Spring Web / WebFlux]
+        TargetStack --- Cloud[Arquitetura: Spring Cloud Microservices]
     end
 
-    subgraph "Estratégia de Modernização"
-        Gap --> Target[Definição da Arquitetura Alvo - Target State]
-        Target --> Roteiro[Elaboração do Roadmap de Migração]
-        Roteiro --> AnaliseRisco[Análise de Risco e Viabilidade]
-    end
+    %% Transição para TOGAF
+    Java21 & SpringBoot & Nuvem & Docker & JPA & Security & WebFlux & Cloud --> VisaoCore[Visão de Arquitetura: Novo Core Bancário Baseado em TOGAF]
+    
+    VisaoCore --> TStart[T_Start]
+    TStart --> FasePrelim[Fase Preliminar: Escopo e Governança]
 
-    subgraph "Saídas e Resultados"
-        AnaliseRisco --> DocFinal[Documento de Arquitetura Final]
-        DocFinal --> Aprovacao[Aprovação do Board/Comitê]
-        Aprovacao --> Execucao[Início da Implementação / Governança]
-    end
+    %% Artefatos Finais
+    FasePrelim --> FaseA[Fase A: Visão de Arquitetura - Objetivos e Metas]
+    FasePrelim --> ArtCap[Artefatos: Mapeamento de Capacidades Core vs Context]
+    FasePrelim --> ArtReq[Artefatos: Engenharia de Requisitos]
+    FasePrelim --> ArtBB[Artefatos: Building Blocks ABBs e SBBs]
+    FasePrelim --> ArtValue[Artefatos: Value Stream]
+    FasePrelim --> DecDDD[Decisões: Padrões DDD Bounded Contexts]
+    FasePrelim --> DecEDA[Decisões: Estilos Event-Driven Architecture EDA]
+    FasePrelim --> Roadmap[Roadmap: Definir Arquitetura Alvo e Intermediária]
+    FasePrelim --> TEnd[T_End]
+    FasePrelim --> Resultado[Resultado: Novo Core Bancário Modernizado]
 
-    %% Estilização
-    style Start fill:#f96,stroke:#333,stroke-width:2px
-    style Decisao fill:#fff4dd,stroke:#d4a017,stroke-width:2px
-    style Visao fill:#e1f5fe,stroke:#01579b
-    style Negocio fill:#e1f5fe,stroke:#01579b
-    style Sistemas fill:#e1f5fe,stroke:#01579b
-    style Tecnologia fill:#e1f5fe,stroke:#01579b
-
+    %% Estilos
+    style Start fill:#f96,stroke:#333
+    style Decisao fill:#f96,stroke:#333
+    style FasePrelim fill:#f96,stroke:#333
+    style TargetStack fill:#f96,stroke:#333
