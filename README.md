@@ -42,65 +42,47 @@ Abaixo, a decomposição da solução utilizando **Event-Driven Architecture** p
 
 ```mermaid
 graph LR
-    %% Estilos (Laranja e Bordas arredondadas conforme o original)
-    classDef startNode fill:#faa,stroke:#333,stroke-width:2px;
-    classDef processNode fill:#ffb366,stroke:#d67a00,stroke-width:2px,color:black,rx:5,ry:5;
-    classDef decisionNode fill:#ffd24d,stroke:#b38f00,stroke-width:2px,color:black,rx:5,ry:5;
-    classDef endNode fill:#ffcc99,stroke:#d67a00,stroke-width:2px,stroke-dasharray: 5 5,rx:5,ry:5;
+    %% Início do Processo
+    Start((Avaliação e Modernização)) --> Preliminar[Fase Preliminar: Preparação e Escopo]
 
-    %% --- BLOCO 1: Entradas (Drivers) ---
-    Start((Início)):::startNode
-    
-    subgraph Inputs [Drivers e Entradas]
-        direction TB
-        In1[Estratégia de Negócio]:::processNode
-        In2[Dores dos Silos Legados]:::processNode
-        In3[Regulatório BACEN/LGPD]:::processNode
-        In4[Débito Técnico COBOL]:::processNode
+    subgraph "Identificação e Diagnóstico"
+        Preliminar --> Entrevistas[Realizar Entrevistas com Stakeholders]
+        Preliminar --> AnaliseDoc[Análise de Documentação Atual]
+        Preliminar --> Inventario[Inventário de Tecnologia e Sistemas]
+        
+        Entrevistas --> Consolidacao[Consolidação de Requisitos e Dores]
+        AnaliseDoc --> Consolidacao
+        Inventario --> Consolidacao
     end
 
-    Start --> In1 & In2 & In3 & In4
-
-    %% Consolidação Inicial
-    Assessment[Assessment da<br/>Situação Atual]:::processNode
-    In1 & In2 & In3 & In4 --> Assessment
-
-    %% --- BLOCO 2: Decisão ---
-    Decisao{Aprovado para<br/>Modernizar?}:::decisionNode
-    Assessment --> Decisao
-
-    %% --- BLOCO 3: O Core (TOGAF ADM) ---
-    %% Caminho Superior: Visão de Negócio
-    Decisao --> BizArch[Arquitetura de<br/>Negócios]:::processNode
-    BizArch --> CapMap[Mapa de<br/>Capacidades]:::processNode
+    Consolidacao --> Decisao{Prosseguir?}
     
-    %% Caminho do Meio: Visão de Sistemas (O mais complexo no desenho)
-    Decisao --> AppArch[Arquitetura de<br/>Sistemas]:::processNode
-    AppArch --> DDD[Definição de<br/>Bounded Contexts]:::processNode
-    DDD --> MicroS[Design de<br/>Microsserviços]:::processNode
-    CapMap & MicroS --> Integ[Estratégia de<br/>Integração (EDA)]:::processNode
-
-    %% Caminho Inferior: Visão Tecnológica
-    Decisao --> TechArch[Arquitetura<br/>Tecnológica]:::processNode
-    TechArch --> Infra[Definição Stack<br/>Java 21/Cloud]:::processNode
-
-    %% --- BLOCO 4: Convergência e Planejamento ---
-    GapAnalysis[Análise de Gaps<br/>(Gap Analysis)]:::processNode
-    
-    Integ --> GapAnalysis
-    Infra --> GapAnalysis
-
-    Roadmap[Roadmap de Migração<br/>(Strangler Fig)]:::processNode
-    GapAnalysis --> Roadmap
-
-    %% --- BLOCO 5: Saídas (Outputs) ---
-    subgraph Outputs [Artefatos Finais]
-        direction TB
-        Out1[Blueprint da<br/>Arquitetura Alvo]:::endNode
-        Out2[Backlog de<br/>Épicos e Histórias]:::endNode
-        Out3[Estudo de<br/>Viabilidade (ROI)]:::endNode
-        Out4[Matriz de<br/>Riscos e Mitigação]:::endNode
+    subgraph "Ciclo TOGAF ADM Adaptado"
+        Decisao -- Sim --> Visao[Fase A: Visão da Arquitetura]
+        Visao --> Negocio[Fase B: Arquitetura de Negócio]
+        Negocio --> Sistemas[Fase C: Arquitetura de Sistemas de Informação]
+        Sistemas --> Tecnologia[Fase D: Arquitetura de Tecnologia]
+        
+        Tecnologia --> Gap[Análise de Gap e Oportunidades]
     end
 
-    Roadmap --> Out1 & Out2 & Out3 & Out4
+    subgraph "Estratégia de Modernização"
+        Gap --> Target[Definição da Arquitetura Alvo - Target State]
+        Target --> Roteiro[Elaboração do Roadmap de Migração]
+        Roteiro --> AnaliseRisco[Análise de Risco e Viabilidade]
+    end
+
+    subgraph "Saídas e Resultados"
+        AnaliseRisco --> DocFinal[Documento de Arquitetura Final]
+        DocFinal --> Aprovacao[Aprovação do Board/Comitê]
+        Aprovacao --> Execucao[Início da Implementação / Governança]
+    end
+
+    %% Estilização
+    style Start fill:#f96,stroke:#333,stroke-width:2px
+    style Decisao fill:#fff4dd,stroke:#d4a017,stroke-width:2px
+    style Visao fill:#e1f5fe,stroke:#01579b
+    style Negocio fill:#e1f5fe,stroke:#01579b
+    style Sistemas fill:#e1f5fe,stroke:#01579b
+    style Tecnologia fill:#e1f5fe,stroke:#01579b
 
