@@ -23,7 +23,7 @@ Escolha baseada na robustez e nas novas features de concorrência.
 * **Record Patterns e Pattern Matching:** Reduz drasticamente o código boilerplate (getters, setters, equals), facilitando a criação de DTOs imutáveis e tornando o código mais legível e seguro.
 * **Suporte Longo (LTS):** Estabilidade garantida pela Oracle até 2028 (suporte principal) e 2031 (estendido), essencial para sistemas bancários.
 
-### 🍃 Framework Principal: Spring Boot 4.0.1
+### 🍃 Framework Principal: Spring Boot 3.2.1
 * **Alta Performance:** Otimizado para Java 17-21, com inicialização 25-40% mais rápida e redução de 30% no uso de memória heap.
 * **Auto-configuração:** Simplifica o setup do projeto, detectando automaticamente dependências e configurando o ambiente sem necessidade de XML complexos.
 * **Observabilidade Nativa:** Inclui suporte nativo a OpenTelemetry para métricas e tracing distribuído, crucial para monitoramento de microsserviços.
@@ -56,4 +56,5 @@ Escolha baseada na robustez e nas novas features de concorrência.
 ### ☁️ Arquitetura Distribuída: Spring Cloud
 * **Service Discovery:** Gerencia o endereço e localização dinâmica dos microsserviços automaticamente (ex: via Eureka ou Consul).
 * **Resiliência (Circuit Breaker):** Implementa padrões de tolerância a falhas (via Resilience4j), evitando que o erro de um serviço derrube todo o ecossistema (efeito cascata).
+
 * **Configuração Centralizada:** Gerencia configurações de todos os microsserviços em um repositório central (Spring Cloud Config), permitindo alterações sem redeploy.
