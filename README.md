@@ -9,12 +9,12 @@
 
 ---
 
-## 📑 Índice
-1. [Contexto e Desafio de Negócio](#1-contexto-e-desafio-de-negócio)
-2. [Estratégia & Decisão (Buy vs Build)](#2-estratégia--decisão-buy-vs-build)
-3. [Arquitetura de Solução (C4 Model)](#3-arquitetura-de-solução-c4-model)
-4. [Liderança Técnica & Performance](#4-liderança-técnica--performance)
-5. [Plano de Migração & ADRs](#5-plano-de-migração--adrs)
+## 📑 Documentação e Arquitetura
+
+Para detalhes da estratégia de modernização e acesso ao case completo, utilize os links abaixo:
+
+* [**📄 Documentação Técnica (PDF)**](./docs/Case%20para%20avaliação%20Enterprise%20Architecture1.pdf)
+* [**🛠️ Stack Tecnológica e Modernização**](./docs/tecnologias.md)
 
 ---
 
@@ -41,84 +41,90 @@ A recomendação técnica priorizou a **Conta de Pagamentos** sobre o Cashback d
 Abaixo, a decomposição da solução utilizando **Event-Driven Architecture** para garantir resiliência e baixa latência.
 
 ```mermaid
-flowchart LR
-    %% Processo de Avaliação de Arquitetura Empresarial e Modernização de Core Bancário
-    A1["Nó Central: Matriz de Riscos Críticos (Heatmap)"]
-    A1 --> B1["1.1 Risco Estratégico: Escolha do Produto<br/>Status: Severidade Crítica"]
-    A1 --> B2["1.2 Risco Arquitetural: Débito Técnico e Silos<br/>Status: Severidade Crítica"]
-    A1 --> B3["1.3 Risco Operacional: Core Bancário<br/>Status: Severidade Crítica"]
-    A1 --> B4["1.4 Riscos Secundários (Altos/Médios)"]
+graph LR
+    %% Início: Matriz de Riscos
+    Start([Enterprise Architecture: Matriz de Riscos Críticos]) --> R_Estrat[Risco Estratégico: Escolha do Produto]
+    Start --> R_Arqui[Risco Arquitetural: Débito Técnico e Legado de Silos]
+    Start --> R_Desenv[Desenvolvimento de Core Bancário Próprio]
+    Start --> R_Sec[Riscos Secundários Altas/Médios]
 
-    B1 --> C1["Análise de Viabilidade Técnica Prévia"]
-    B1 --> C2["Abordagem MVP Paralela"]
-    B1 --> C3["Uso do TOGAF ADM"]
+    %% Detalhamento de Riscos e Mitigações
+    R_Estrat --> AvaliacaoComp[Avaliação de Complexidade Técnica - Avaliação do Time de Enterprise Architect]
+    R_Arqui --> AvaliacaoComp
+    R_Desenv --> AvaliacaoComp
+    R_Sec --> AvaliacaoComp
 
-    B2 --> C4["Mapeamento DDD (Bounded Contexts)"]
-    B2 --> C5["Implementar Camada Anticorrupção (ACL)"]
-    B2 --> C6["Aplicar Strangler Fig Pattern"]
-    B2 --> C7["Adotar Service Mesh"]
+    %% Itens da Avaliação Técnica
+    AvaliacaoComp --- AnaliseVia[Análise de Viabilidade Técnica Prévia]
+    AvaliacaoComp --- AbordagemMVP[Abordagem MVP Paralela]
+    AvaliacaoComp --- UsoTOGAF[Uso do TOGAF ADM]
+    AvaliacaoComp --- MapeamentoDDD[Mapeamento DDD Bounded Contexts]
+    AvaliacaoComp --- CamadaACL[Implementar Camada Anticorrupção ACL]
+    AvaliacaoComp --- Strangler[Aplicar Strangler Fig Pattern]
+    AvaliacaoComp --- ServiceMesh[Adotar Service Mesh]
+    AvaliacaoComp --- AnaliseMakeBuy[Análise Make vs. Buy]
+    AvaliacaoComp --- POC[Realizar POC com Fornecedores]
+    AvaliacaoComp --- SoluHibrida[Adotar Solução Híbrida]
+    AvaliacaoComp --- ExitStrategy[Incluir Cláusula de Exit Strategy]
 
-    B3 --> C8["Análise Make vs. Buy"]
-    B3 --> C9["Realizar POC com Fornecedores"]
-    B3 --> C10["Adotar Solução Híbrida"]
-    B3 --> C11["Incluir Cláusula de Exit Strategy"]
+    %% Decisão e Silos
+    AvaliacaoComp --> Decisao{Decisão de Produto Inicial}
+    
+    Decisao --> IdentSilos[Identificação dos 5 Grandes Silos: CDC, Cartão, Pessoal, Consignado, Imóvel]
+    
+    IdentSilos --> ContasPag[CONTAS DE PAGAMENTO: Tempo 12-18 meses - Impacto Transformacional]
+    IdentSilos --> Cashback[CASHBACK: Complexidade Média - Impacto Incremental]
+    
+    %% Detalhamento dos Silos
+    IdentSilos --> Silo1[Silo 1: CDC - Tec: Mainframe/COBOL]
+    IdentSilos --> Silo2[Silo 2: Cartão de Crédito - Tec: Alta Latência]
+    IdentSilos --> Silo3[Silo 3: Crédito Pessoal - Dep: Averbadoras Externas]
+    IdentSilos --> Silo4[Silo 4: Consignados - Dados: Histórico Fragmentado]
+    IdentSilos --> Silo5[Silo 5: Empréstimos com Garantia]
 
-    B4 --> C12["Risco Regulatório: Conformidade"]
-    B4 --> C13["Risco Integração: Padrão Saga e EDA"]
-    B4 --> C14["Risco Organizacional: OKRs e CM"]
-    B4 --> C15["Risco Financeiro: Contingência 30%"]
-    B4 --> C16["Risco Segurança: Zero Trust/mTLS"]
+    %% Estratégia de Modernização
+    ContasPag --> EstratMod[Estratégia de Modernização: Refatoração dos Silos]
+    Silo1 & Silo2 & Silo3 & Silo4 & Silo5 --> EstratMod
+    
+    EstratMod --> StranglerApp[Abordagem: Strangler Fig Pattern Substituição Gradual]
+    EstratMod --> Spaghetti[Problema: The Spaghetti Mess - Conexões Ponto-a-Ponto]
 
-    C1 & C2 & C3 & C4 & C5 & C6 & C7 & C8 & C9 & C10 & C11 & C12 & C13 & C14 & C15 & C16 --> D1["Avaliação de Complexidade Técnica e Time-to-Market"]
+    %% Target Stack
+    StranglerApp --> TargetStack[Definir Pilha Tecnológica Alvo Target State]
+    Spaghetti --> TargetStack
 
-    D1 --> E1{Decisão de Produto Inicial}
-    E1 --Conta de Pagamentos--> F1["Complexidade: Muito Alta<br/>Tempo: 12-18 meses<br/>Barreira: Alta (BACEN)<br/>Reaproveitamento: Alto<br/>Impacto: Transformacional"]
-    E1 --Cashback--> F2["Complexidade: Média<br/>Tempo: 6-9 meses<br/>Barreira: Baixa<br/>Reaproveitamento: Médio<br/>Impacto: Incremental"]
-
-    F1 & F2 --> G1["Identificação dos 5 Grandes Silos (Estado Atual)"]
-
-    subgraph SG_SILOS["Silos Legados (Estado Atual)"]
-        direction TB
-        SG_Start --> H1["Silo 1: Empréstimos CDC<br/>Tec: Mainframe/COBOL<br/>Dados: Base A Isolada"]
-        H1 --> H2["Silo 2: Gestão de Cartão<br/>Tec: Alta Latência<br/>Dados: Base B Isolada"]
-        H2 --> H3["Silo 3: Consignado<br/>Tec: Processamento Batch<br/>Dep: Averbadoras Externas"]
-        H3 --> H4["Silo 4: Crédito Pessoal<br/>Dados: Histórico Fragmentado"]
-        H4 --> H5["Silo 5: Garantias & Consórcios<br/>Problema: Regras de Colateral Presas"]
-        H5 --> SG_End
+    subgraph "Pilha Tecnológica Alvo"
+        TargetStack --- Java21[Linguagem: Java 21]
+        TargetStack --- SpringBoot[Framework: Spring Boot 3.3.x]
+        TargetStack --- Nuvem[Gerenciamento: Nuvem]
+        TargetStack --- Docker[Containerização: Docker]
+        TargetStack --- JPA[Persistência: Spring Data JPA / Hibernate]
+        TargetStack --- Security[Segurança: Spring Security]
+        TargetStack --- WebFlux[APIs: Spring Web / WebFlux]
+        TargetStack --- Cloud[Arquitetura: Spring Cloud Microservices]
     end
 
-    G1 --> SG_Start
-    SG_End --> I1["Problema: The Spaghetti Mesh<br/>- Conexões Ponto-a-Ponto<br/>- Acoplamento Oculto<br/>- Ausência de API Gateway/ESB<br/>- Latência Síncrona"]
+    %% Transição para TOGAF
+    Java21 & SpringBoot & Nuvem & Docker & JPA & Security & WebFlux & Cloud --> VisaoCore[Visão de Arquitetura: Novo Core Bancário Baseado em TOGAF]
+    
+    VisaoCore --> TStart[T_Start]
+    TStart --> FasePrelim[Fase Preliminar: Escopo e Governança]
 
-    I1 --> I2["Fluxo de Falha: Customer 360º Fragmentado<br/>Ex: Cliente 'João' com dados inconsistentes em 3 silos"]
+    %% Artefatos Finais
+    FasePrelim --> FaseA[Fase A: Visão de Arquitetura - Objetivos e Metas]
+    FasePrelim --> ArtCap[Artefatos: Mapeamento de Capacidades Core vs Context]
+    FasePrelim --> ArtReq[Artefatos: Engenharia de Requisitos]
+    FasePrelim --> ArtBB[Artefatos: Building Blocks ABBs e SBBs]
+    FasePrelim --> ArtValue[Artefatos: Value Stream]
+    FasePrelim --> DecDDD[Decisões: Padrões DDD Bounded Contexts]
+    FasePrelim --> DecEDA[Decisões: Estilos Event-Driven Architecture EDA]
+    FasePrelim --> Roadmap[Roadmap: Definir Arquitetura Alvo e Intermediária]
+    FasePrelim --> TEnd[T_End]
+    FasePrelim --> Resultado[Resultado: Novo Core Bancário Modernizado]
 
-    I2 --> J1["Estratégia de Modernização: Refatoração dos Silos"]
-    J1 --> K1["Abordagem: Strangler Fig Pattern (Substituição Gradual)"]
-    J1 --> K2["Definir Pilha Tecnológica Alvo (Target Stack)"]
+    %% Estilos
+    style Start fill:#f96,stroke:#333
+    style Decisao fill:#f96,stroke:#333
+    style FasePrelim fill:#f96,stroke:#333
+    style TargetStack fill:#f96,stroke:#333
 
-    K2 --> L1["Linguagem: Java 21"]
-    K2 --> L2["Framework: Spring Boot 4.0.1"]
-    K2 --> L3["Gerenciamento: Maven"]
-    K2 --> L4["Containerização: Docker"]
-    K2 --> L5["Persistência: Spring Data JPA / Hibernate"]
-    K2 --> L6["Segurança: Spring Security"]
-    K2 --> L7["APIs: Spring Web / WebFlux"]
-    K2 --> L8["Arquitetura: Spring Cloud (Microsserviços)"]
-
-    L1 & L2 & L3 & L4 & L5 & L6 & L7 & L8 --> M1["Visão de Arquitetura: Novo Core Bancário (Baseado em TOGAF)"]
-
-    subgraph SG_TOGAF["Ciclo TOGAF ADM para Novo Core"]
-        direction TB
-        T_Start --> N1["Fase Preliminar: Escopo e Governança"]
-        N1 --> N2["Fase A: Visão de Arquitetura<br/>- Objetivo: Adaptabilidade<br/>- Escopo: CDC, Cartão, Crédito, Consignado, Garantias"]
-        N2 --> N3["Artefatos: Mapeamento de Capacidades (Core vs. Context)"]
-        N3 --> N4["Artefatos: Engenharia de Requisitos (Funcionais e Não-Funcionais)"]
-        N4 --> N5["Artefatos: Building Blocks (ABBs e SBBs)"]
-        N5 --> N6["Artefatos: Value Stream (Solicitação até Liberação)"]
-        N6 --> N7["Decisões: Padrões (DDD Bounded Contexts, Decomposição por Subdomínio)"]
-        N7 --> N8["Decisões: Estilos (Event-Driven Architecture - EDA)"]
-        N8 --> N9["Roadmap: Definir Arquitetura Alvo e Arquiteturas Intermediárias"]
-        N9 --> T_End
-    end
-    M1 --> T_Start
-    T_End --> O1["Resultado: Novo Core Bancário (Funcionalidade Emergente)<br/>Orquestra a atualização gradual dos produtos legados"]
