@@ -9,12 +9,12 @@
 
 ---
 
-## 📑 Índice
-1. [Contexto e Desafio de Negócio](#1-contexto-e-desafio-de-negócio)
-2. [Estratégia & Decisão (Buy vs Build)](#2-estratégia--decisão-buy-vs-build)
-3. [Arquitetura de Solução (C4 Model)](#3-arquitetura-de-solução-c4-model)
-4. [Liderança Técnica & Performance](#4-liderança-técnica--performance)
-5. [Plano de Migração & ADRs](#5-plano-de-migração--adrs)
+## 📑 Documentação e Arquitetura
+
+Para detalhes da estratégia de modernização e acesso ao case completo, utilize os links abaixo:
+
+* [**📄 Documentação Técnica (PDF)**](./docs/Case%20para%20avaliação%20Enterprise%20Architecture1.pdf)
+* [**🛠️ Stack Tecnológica e Modernização**](./docs/tecnologias.md)
 
 ---
 
@@ -127,3 +127,4 @@ graph LR
     style Decisao fill:#f96,stroke:#333
     style FasePrelim fill:#f96,stroke:#333
     style TargetStack fill:#f96,stroke:#333
+
