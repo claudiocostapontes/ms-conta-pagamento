@@ -13,7 +13,7 @@
 
 Para detalhes da estratégia de modernização e acesso ao case completo, utilize os links abaixo:
 
-* [**📄 Documentação Técnica (PDF)**](./docs/Case%20para%20avaliação%20Enterprise%20Architecture1.pdf)
+* [**📄 Documentação Técnica (PDF)**](./docs/case_arquitetura.pdf)
 * [**🛠️ Stack Tecnológica e Modernização**](./docs/tecnologias.md)
 
 ---
@@ -127,5 +127,6 @@ graph LR
     style Decisao fill:#f96,stroke:#333
     style FasePrelim fill:#f96,stroke:#333
     style TargetStack fill:#f96,stroke:#333
+
 
 
